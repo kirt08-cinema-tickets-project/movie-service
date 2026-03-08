@@ -181,7 +181,7 @@ MOVIES = [
         "duration": 202,
         "release_date": datetime(2025, 12, 31),
         "release_year": 1974,
-        "rating_age": None,
+        "rating_age": 0,
         "country": "США",
         "category": None
     },
