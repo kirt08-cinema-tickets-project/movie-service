@@ -1,7 +1,9 @@
 from google.protobuf.timestamp_pb2 import Timestamp
 from kirt08_contracts.movie import movie_pb2
+from kirt08_contracts.category import category_pb2
 
 from src.movie.shemas import MovieDatabase
+from src.categories.shemas import CategoryBaseDatabase
 
 def dto_movie_to_proto_movie_pb2(movie: MovieDatabase) -> movie_pb2.Movie:
     ts = None
@@ -37,4 +39,11 @@ def dto_movie_to_proto_movie_details_pb2(movie: MovieDatabase) -> movie_pb2.Movi
         rating_age=movie.rating_age,
         country=movie.country,
         release_date=ts,
+    )
+
+def dto_category_to_proto_category_pb2(category: CategoryBaseDatabase) -> category_pb2.Category:
+    return category_pb2.Category(
+        id = str(category.id),
+        title = category.title,
+        slug = category.slug,
     )

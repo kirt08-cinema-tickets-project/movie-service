@@ -1,15 +1,18 @@
 import grpc
 import logging
 
-from kirt08_contracts.movie import movie_pb2, movie_pb2_grpc
+from kirt08_contracts.movie import movie_pb2_grpc
+from kirt08_contracts.category import category_pb2_grpc
 
-from src.movie.handler import Movie
+from src.movie import Movie
+from src.categories import Category
 
 from src.core.config import settings
 
 from src.core.db import service_insert_all_data_from_seed, db
 
 from src.core.grpc_server.movie import gRPC_Movie_Server
+from src.core.grpc_server.category import gRPC_Category_Server
 
 
 log = logging.getLogger(__name__)
@@ -22,12 +25,18 @@ async def serve():
     log.info("gRPC server starting up...")
 
     movie = Movie(db)
+    category = Category(db)
 
     server = grpc.aio.server()
 
     movie_pb2_grpc.add_MovieServiceServicer_to_server(
-        gRPC_Movie_Server(movie),
-        server
+        gRPC_Movie_Server(movie = movie),
+        server = server
+    )
+
+    category_pb2_grpc.add_CategoryServiceServicer_to_server(
+        gRPC_Category_Server(category = category),
+        server = server
     )
 
     url = f"{settings.grpc.host}:{settings.grpc.port}"
