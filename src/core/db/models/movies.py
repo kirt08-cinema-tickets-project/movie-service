@@ -27,5 +27,5 @@ class MoviesORM(Base):
     country: Mapped[str] = mapped_column(String(256))
     rating_age: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
-    category: Mapped[int] = mapped_column(ForeignKey("categories.slug"), nullable=True)
+    category: Mapped[str] = mapped_column(ForeignKey("categories.slug"), nullable=True)
     categories_rel: Mapped["CategoriesORM"] = relationship(back_populates="movies_rel")

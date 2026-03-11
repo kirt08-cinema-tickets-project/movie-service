@@ -3,10 +3,18 @@ from datetime import datetime
 from sqlalchemy import select, Select, func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import NoResultFound, MultipleResultsFound
 
 from src.core.db.models import MoviesORM
 
-from src.movie.shemas import MovieDatabase
+from src.movie.shemas import (
+    MovieDatabase, 
+    MovieDetailsDatabase,
+)
+
+from src.movie.exceptions import (
+    InvalidDataException,
+)
 
 
 async def service_list_movies(category: str, random: bool, limit: int, session: AsyncSession) -> list[MovieDatabase]:
@@ -43,3 +51,35 @@ def _build_query_order(query: Select[tuple[MoviesORM]], random: bool) -> Select[
         return query.order_by(func.random())
     else:
         return query.order_by(MoviesORM.release_date.desc())
+
+
+async def service_get_movie_by_slug(slug: str, session: AsyncSession) -> MovieDetailsDatabase:
+    try:
+        data_orm = (await session.execute(
+            select(MoviesORM)
+            .filter_by(slug = slug)
+            .options(
+                joinedload(MoviesORM.categories_rel)
+            )
+        )).scalars().one()
+    except (NoResultFound, MultipleResultsFound):
+        raise InvalidDataException
+    
+    data_dto = MovieDetailsDatabase.model_validate(data_orm)
+    return data_dto
+
+async def service_get_movie_by_id(id: str, session: AsyncSession) -> MovieDetailsDatabase:
+    try:
+        data_orm = (await session.execute(
+            select(MoviesORM)
+            .filter_by(id = id)
+            .options(
+                joinedload(MoviesORM.categories_rel)
+            )
+        )).one()
+    except NoResultFound:
+        raise InvalidDataException("Movie with such id doesn't exist")
+    
+    data_dto = MovieDetailsDatabase.model_validate(data_orm)
+    return data_dto
+

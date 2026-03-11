@@ -27,3 +27,10 @@ class MovieDatabase(Movie):
         from_attributes=True
     )
     categories_rel: Category | None
+
+class MovieDetailsDatabase(MovieDatabase):
+    description: str
+    banner: str
+    duration: int
+    country: str
+    
