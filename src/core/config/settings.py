@@ -4,8 +4,11 @@ from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from src.core.config.grpcConfig import GrpcConfig
+from src.core.config.cacheConfig import CacheConfig
+from src.core.config.redisConfig import RedisConfig
 from src.core.config.loggerConfig import LoggerConfig
 from src.core.config.databaseConfig import DatabaseConfig
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 env_name = os.getenv("ENVIRONMENT", "development").lower()
@@ -22,6 +25,8 @@ class Settings(BaseSettings):
     logger: LoggerConfig = LoggerConfig()
     grpc: GrpcConfig = GrpcConfig()
     db: DatabaseConfig = DatabaseConfig()
+    redis: RedisConfig = RedisConfig()
+    cache: CacheConfig = CacheConfig()
 
 
 settings = Settings()

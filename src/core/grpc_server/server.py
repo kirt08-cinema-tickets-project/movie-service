@@ -10,6 +10,7 @@ from src.categories import Category
 from src.core.config import settings
 
 from src.core.db import service_insert_all_data_from_seed, db
+from src.core.redis_db import get_redis, RedisService
 
 from src.core.grpc_server.movie import gRPC_Movie_Server
 from src.core.grpc_server.category import gRPC_Category_Server
@@ -24,7 +25,8 @@ async def serve():
     
     log.info("gRPC server starting up...")
 
-    movie = Movie(db)
+    redis: RedisService = await get_redis()
+    movie = Movie(db, redis)
     category = Category(db)
 
     server = grpc.aio.server()

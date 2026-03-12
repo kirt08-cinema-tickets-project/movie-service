@@ -41,7 +41,7 @@ def _build_query_where(query: Select[tuple[MoviesORM]], category: str) -> Select
     if category == "now":
         query.where(MoviesORM.release_date <= now)
     elif category == "soon":
-        query.where((MoviesORM.release_date > now) or (MoviesORM.release_date.is_(None)))
+        query.where((MoviesORM.release_date > now) | (MoviesORM.release_date.is_(None)))
     else:
         query.where(MoviesORM.category == category)
     return query
