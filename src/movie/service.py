@@ -76,7 +76,7 @@ async def service_get_movie_by_id(id: str, session: AsyncSession) -> MovieDetail
             .options(
                 joinedload(MoviesORM.categories_rel)
             )
-        )).one()
+        )).scalars().one()
     except NoResultFound:
         raise InvalidDataException("Movie with such id doesn't exist")
     
