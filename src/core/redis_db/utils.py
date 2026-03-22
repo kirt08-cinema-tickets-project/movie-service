@@ -7,7 +7,7 @@ class MovieCacheKeys:
                 "list",
                 "all" if not category else category,
                 "random" if random else "ordered",
-                "nolimit" if not limit else limit
+                "nolimit" if not limit else str(limit)
             ]
         )
 
